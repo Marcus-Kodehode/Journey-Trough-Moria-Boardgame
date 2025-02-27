@@ -8,7 +8,6 @@
 function updatePlayerStats() {
     const playerStats = document.getElementById('playerStats');
     playerStats.innerHTML = `
-        🩸 Health: ${player.health} | 
         ✨ Treasures Collected: ${player.inventory.length}/${treasures.length} | 
         🚶‍♂️ Moves: ${player.moves} 
     `;
