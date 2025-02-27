@@ -21,7 +21,7 @@ function generateBoard() {
     gameBoard = Array.from({ length: 5 }, () => Array(5).fill(''));
     treasures.forEach(t => placeRandomly(t));
     placeRandomly('🔥 Balrog');
-    placeRandomly('🐟 Gollum'); // 🐟 Gollum legges til på brettet
+    gameBoard[4][0] = '🐟 Gollum'; // 📍 Plasser Gollum fast i nedre venstre hjørne
 }
 
 
