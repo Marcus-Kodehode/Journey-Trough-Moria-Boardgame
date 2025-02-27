@@ -20,7 +20,7 @@ function placeRandomly(item) {
 function generateBoard() {
     gameBoard = Array.from({ length: 5 }, () => Array(5).fill(''));
     treasures.forEach(t => placeRandomly(t));
-    placeRandomly('🔥 Balrog');
+    gameBoard[4][4] = '🔥 Balrog'; // 📍 Plasser Balrog fast i nedre høyre hjørne
     gameBoard[4][0] = '🐟 Gollum'; // 📍 Plasser Gollum fast i nedre venstre hjørne
 }
 
