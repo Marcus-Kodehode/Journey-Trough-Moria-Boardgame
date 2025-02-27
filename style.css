@@ -1,0 +1,412 @@
+/* 🎨 Generelle innstillinger */
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
+
+@keyframes backgroundShift {
+    0% { background-color: #1a1a1a; }
+    25% { background-color: #2b1b1b; }
+    50% { background-color: #2e2a3d; }
+    75% { background-color: #1f1c29; }
+    100% { background-color: #1a1a1a; }
+}
+
+:root {
+    --cell-size: 80px;
+    --player-glow: #00ff88;
+    --treasure-glow: #ffd700;
+    --balrog-glow: #ff4500;
+    --background-color: #1a1a1a;
+    --text-color: #f0e6d2;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    animation: backgroundShift 15s infinite alternate;
+    background-size: 400% 400%;
+    color: var(--text-color);
+    font-family: 'MedievalSharp', cursive;
+    text-align: center;
+    transition: background-color 1s ease;
+}
+
+/* 🖼️ Spillbrett container */
+#gameContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 90vh;
+    position: relative;
+}
+
+/* 🎮 Spillbrett */
+#gameBoard {
+    border-collapse: collapse;
+    margin: 0 auto;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+    position: relative;
+    z-index: 1;
+    overflow: visible; /* 🪟 Sørger for at gløden ikke kuttes */
+}
+
+/* 🔳 Cellene med gjennomsiktig bakgrunn og grid bak */
+td {
+    width: var(--cell-size);
+    height: var(--cell-size);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(43, 43, 43, 0.2); /* Semi-transparent bakgrunn */
+    position: relative;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    overflow: visible;
+}
+
+td::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    z-index: -1; /* Grid bak brikkene */
+}
+
+/* 🖼️ Bildene */
+.glow {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.glow img {
+    width: 65px;
+    height: 65px;
+    object-fit: contain;
+    z-index: 2;
+    overflow: visible;
+}
+/* 🖼️ Forbedret bildekvalitet for brikkene */
+.glow img {
+    width: 65px;
+    height: 65px;
+    object-fit: contain;
+    z-index: 4;
+    image-rendering: crisp-edges; /* 📸 Gjør ikonene skarpere */
+    image-rendering: -webkit-optimize-contrast;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.7));
+}
+
+/* 🟢 Grønn glød for Gimli - sterkere og pulserende */
+.player-glow {
+    filter: drop-shadow(0 0 25px #00ff88) drop-shadow(0 0 50px #00ff88);
+    animation: playerGlow 1.5s infinite alternate;
+}
+
+@keyframes playerGlow {
+    0% { filter: drop-shadow(0 0 15px #00ff88) drop-shadow(0 0 30px #00ff88); }
+    100% { filter: drop-shadow(0 0 35px #00ff88) drop-shadow(0 0 60px #00ff88); }
+}
+
+/* 🟡 Gullglød for skatter - mer intens og blendende */
+.treasure-glow {
+    filter: drop-shadow(0 0 30px #ffd700) drop-shadow(0 0 60px #ffd700);
+    animation: treasureGlow 2s infinite alternate;
+}
+
+@keyframes treasureGlow {
+    0% { filter: drop-shadow(0 0 20px #ffd700) drop-shadow(0 0 45px #ffd700); }
+    100% { filter: drop-shadow(0 0 40px #ffd700) drop-shadow(0 0 70px #ffd700); }
+}
+
+/* 🔴 Rød glød for Balrog - kraftig og dramatisk */
+.balrog-glow {
+    filter: drop-shadow(0 0 35px #ff4500) drop-shadow(0 0 70px #ff4500);
+    animation: balrogPulse 1.2s infinite alternate;
+}
+
+@keyframes balrogPulse {
+    0% { filter: drop-shadow(0 0 30px #ff4500) drop-shadow(0 0 60px #ff6347); }
+    50% { filter: drop-shadow(0 0 45px #ff4500) drop-shadow(0 0 80px #ff4500); }
+    100% { filter: drop-shadow(0 0 30px #ff4500) drop-shadow(0 0 60px #ff4500); }
+}
+
+/* 🎬 Pop-up stil for Game Over/Victory */
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 100;
+}
+
+.popup-content {
+    background-color: #1b1b1b;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    color: #f0e68c;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+.popup-content h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.popup-content p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+
+.popup-content button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    background-color: #ffd700;
+    color: #000;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.popup-content button:hover {
+    background-color: #ffc107;
+}
+
+/* 🚫 Skjul popup med hidden klasse */
+.popup.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+/* ✨ Midlertidig pop-up når skatter samles */
+.treasure-popup {
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 215, 0, 0.95);
+    color: #000;
+    padding: 20px 40px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    box-shadow: 0 0 15px rgba(255, 223, 0, 0.8);
+    opacity: 0;
+    visibility: hidden;
+    z-index: 200;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.treasure-popup.show {
+    opacity: 1;
+    visibility: visible;
+    animation: fadeOut 2.5s forwards;
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; visibility: hidden; }
+}
+.popup-content {
+    position: relative;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #222;
+    color: #f5f5dc;
+    text-align: center;
+    width: 300px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+/* 🎨 Popup container styling */
+.popup-content {
+    position: relative;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #222;
+    color: #f5f5dc;
+    text-align: center;
+    width: 300px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+/* ❌ X-ikon kun for encounter popup */
+#popupCloseIcon {
+    display: none; /* 🚫 Standard skjult */
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+    font-size: 1.8rem;
+    color: #ff6347;
+    transition: color 0.3s ease;
+    z-index: 10;
+}
+
+#popupCloseIcon:hover {
+    color: #ff4500; /* 🎨 Mørkere rød ved hover */
+}
+
+#restartButton {
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #00ff88;
+    color: #1a1a1a;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+#restartButton:hover {
+    background-color: #00cc6a;
+}
+
+@keyframes popupFade {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* ✨ Spillstatistikk og meldinger */
+#playerStats, #gameMessages {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 1.2rem;
+}
+
+#gameMessages {
+    color: #e0a96d;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px black;
+}
+
+/* 🎮 Hover-effekt */
+td:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}
+/* 🌫️ Bevegelig Fog of War-effekt */
+@keyframes movingFog {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.fog {
+    position: relative;
+    background: linear-gradient(120deg, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.98));
+    background-size: 400% 400%;
+    animation: movingFog 12s ease infinite; /* 🌫️ Bevegende tåke-effekt */
+    transition: opacity 0.5s ease, filter 0.5s ease;
+    opacity: 1;
+    z-index: 3;
+}
+
+.visible {
+    opacity: 1;
+    background: transparent;
+    transition: opacity 0.5s ease, background 0.5s ease;
+    z-index: 1;
+}
+
+
+/* 🖼️ Glød-effekt for brikkene (tilbakestilt) */
+.glow img {
+    width: 65px;
+    height: 65px;
+    object-fit: contain;
+    z-index: 4; /* 🔝 Sørger for at gløden er over tåken */
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.6));
+}
+
+.player-glow {
+    filter: drop-shadow(0 0 15px #00ff88) drop-shadow(0 0 30px #00ff88);
+    animation: playerGlow 2s infinite alternate;
+}
+
+.treasure-glow {
+    filter: drop-shadow(0 0 20px #ffd700) drop-shadow(0 0 40px #ffd700);
+    animation: treasureGlow 2s infinite alternate;
+}
+
+.balrog-glow {
+    filter: drop-shadow(0 0 25px #ff4500) drop-shadow(0 0 50px #ff4500);
+    animation: balrogPulse 1.5s infinite alternate;
+}
+
+/* 🎨 Fjern synlige grid-linjer i mørket */
+td {
+    width: var(--cell-size);
+    height: var(--cell-size);
+    border: none; /* 🚫 Fjernet rammer som var synlige gjennom tåken */
+    background-color: transparent;
+    position: relative;
+    overflow: hidden;
+    transition: background-color 0.3s ease;
+}
+
+td.fog::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 1); /* 🖤 Fullt mørke for å skjule gridet */
+    opacity: 0.95;
+    z-index: 2;
+    transition: opacity 0.5s ease;
+}
+
+
+/* 🖥️ Responsivt design */
+@media (max-width: 768px) {
+    :root {
+        --cell-size: 60px;
+    }
+
+    td img {
+        width: 50px;
+        height: 50px;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+}
+/* 🌫️ Fog of War-stil: Skjuler celler som ikke er nær Gimli */
+.fog {
+    filter: brightness(0%) contrast(0%);
+    transition: filter 0.5s ease;
+}
+
+.visible {
+    filter: brightness(100%) contrast(100%);
+    transition: filter 0.5s ease;
+}
+
+
+

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journey Through Moria</title>
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    <h1>Journey Through Moria</h1>
+    <div id="gameContainer">
+        <table id="gameBoard"></table>
+        <div id="playerStats"></div>
+    </div>
+
+    <!-- ✨ Popup for skattesamling -->
+    <div id="treasurePopup" class="treasure-popup hidden">
+        <p id="treasureMessage"></p>
+    </div>
+    <!-- 🎬 Popup for Gollum-kamp og Game Over -->
+    <div id="gamePopup" class="popup hidden">
+        <div class="popup-content">
+            <span id="popupCloseIcon">❌</span> <!-- ✅ Nå plassert korrekt inne i popupen -->
+            <h2 id="popupTitle"></h2>
+            <p id="popupMessage"></p>
+            <button onclick="closePopup()">🔄 Play Again</button>
+        </div>
+    </div>    
+    <!-- 🎬 Popup for seier/tap -->
+    <div id="gamePopup" class="popup hidden">
+        <div class="popup-content">
+            <h2 id="popupTitle"></h2>
+            <p id="popupMessage"></p>
+            <button onclick="closePopup()">🔄 Play Again</button>
+        </div>
+    </div>
+
+    <!-- 📜 JS-filer lastes inn -->
+    <script src="board.js"></script>
+    <script src="player.js"></script>
+    <script src="gameLogic.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+
+
